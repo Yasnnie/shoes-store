@@ -1,15 +1,13 @@
-class Person:
+from add_purchase_mixin import AddPurchaseMixin
+
+class Person(AddPurchaseMixin):
 
     def __init__(self,cpf,name,address,birth_date):
         self.__name = name
         self.__address = address
         self.__birth_date = birth_date
         self.__cpf = cpf
-        self.__purchases = []
 
-    def add_purchase(self,purchase):
-        self.__purchases.appendd(purchase)
-    
     def get_cpf(self):
         return self.__cpf
     
@@ -33,9 +31,3 @@ class Person:
     
     def set_birth_date(self, birth_date):
         self.__birth_date = birth_date
-
-    def get_purchases(self):
-        return self.__purchases
-    
-    def set_purchases(self, purchases):
-        self.__purchases = purchases

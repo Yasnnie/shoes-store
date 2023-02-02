@@ -16,4 +16,6 @@ class Customer(Person):
         cashier.cancel_purchase(id)
     
     def new_purchase(self, products, cashier,employee):
-        pass
+        Purchase(self,products,cashier,employee)
+
+        

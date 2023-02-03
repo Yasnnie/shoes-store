@@ -1,6 +1,11 @@
+import PySimpleGUI as sg
 from employee import Employee
+# from customers import Customer
+
+sg.theme('DarkAmber')
 
 employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Estoquista")]
+# customers = [Customer("44455566678", "Victor Rafael", "Teste","13/12/1998")]
 
 
 def find_option(list_options, option):
@@ -20,41 +25,75 @@ def category_product():
     print("Produto")
 
 def category_employee():
-    print("========== Escolha uma função: ==========\n\n1.Criar funcionário\n2.Listar funcionários\n3.Comissão de um funcionário:\n4.Sair\n\n==========================================")
-    option = int(input())
+    layout = [[sg.Text("Selecione uma opção:")],[sg.Listbox(values=['Criar funcionário', 'Listar funcionários', 'Comissão de um funcionário'], size=(60, 6))],[sg.Ok(), sg.Cancel()]]
 
-    if option == 1:
-
-        print("Digite respectivamente: CPF, Nome, Endereço, Data de aniversário e Cargo")
-        cpf = input()
-        name = input()
-        address = input()
-        birth_date = input()
-        office = input()
-        employees.append(Employee(cpf,name,address,birth_date,office))
-
-    if option == 2:
-        print("======= Funcionários =======")
-        for x in employees:
-            print("{}\n----------------------------".format(x))
-
+    window = sg.Window('Funcionário', layout)
     
-    if option == 3: 
 
-        print("Digite o CPF do funcionário:")
-        cpf = input()
+    while True:
+        event, values = window.read()
+        if event == "Ok":
+            option = values[0][0]
 
-        find = find_option(employees, cpf)
+     
+            if option == "Criar funcionário":
 
-        if find != None:
-            print(find.comission())
+                layout2 = [[sg.Text("CPF:"),sg.InputText()],
+                [sg.Text("Nome:"),sg.InputText()],
+                [sg.Text("Endereço:"),sg.InputText()],
+                [sg.Text("Data de aniversário:"),sg.InputText()],
+                [sg.Text("Cargo:"),sg.InputText()],
+                [sg.Ok()]]
 
-        else:
-            print("Funcionário não encontrado!!")
+                form = sg.Window(values[0][0], layout2)
+                
+                event2, values2 = form.read()
+
+                if event2 == "Ok":
+                    employees.append(Employee(values[0],values[1],values[2],values[3],values[4]))
+                    form.close()
+
+            if option == "Listar funcionários":
+                layout2 = []
+        
+                
+                for x in employees:
+                    layout2.append([sg.Text(x)])
+                    layout2.append([sg.Text("------------------------")])
+
+                form = sg.Window(values[0][0], layout2)
+                form.read()
+
+            
+            if option == "Comissão de um funcionário": 
+                layout2 = [[sg.Text("Digite o CPF do funcionário:"),sg.InputText()],
+                [sg.Text( key='-TEXT-')],
+                [sg.Ok()]]
+
+                form = sg.Window(values[0][0], layout2)
+                
+                event2, values2 = form.read()
+                if event2 == "Ok":
+                    find = find_option(employees, values2[0])
+
+                    if find != None:
+    
+                        form['-TEXT-'].Update(find.comission())
+
+                    else:
+                        print("Funcionário não encontrado!!")
+
+        if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+            window.close()
+            break
 
 
 def category_customer():
-    print("Cliente")
+    print("========== Escolha uma função: ==========\n\n1.Criar cliente\n2.Listar clientes\n3.Dados do cliente\n4.Realizar um compra\n5.Pagar uma compra\n6.Cancelar compra\n7.Sair\n\n==========================================")
+    option = int(input())
+
+    # if option == 1:
+
 
 def category_stock():
     print("Estoque")
@@ -62,21 +101,35 @@ def category_stock():
 def category_cashier():
     print("Caixa")
 
+layout = [[sg.Text("Selecione uma categoria:")],[sg.Listbox(values=['Endereço', 'Funcionário', 'Cliente','Produto','Caixa','Estoque'], size=(60, 6))],[sg.Submit(), sg.Cancel()]]
+
+window = sg.Window('Bem-vindo', layout)
 
 while True:
-    print("========= Escolha uma categoria: =========\n\n1.Endereço\n2.Produto\n3.Funcionário\n4.Cliente\n5.Estoque\n6.Caixa\n7.Sair\n\n===========================================")
-    option = int(input())
-    if option == 1:
-        category_address()
-    if option == 2:
-        category_product()
-    if option == 3:
-        category_employee()
-    if option == 4:
-        category_customer()
-    if option == 5:
-        category_stock()
-    if option == 6:
-        category_cashier()
-    if option < 1 or option >= 7:
+    event, values = window.read()
+
+    if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
         break
+
+    if event == "Submit":
+
+        if values[0][0] == "Endereço":
+            category_address()
+
+        if values[0][0] == "Funcionário":
+            category_employee()
+
+        if values[0][0] == "Cliente":
+            category_customer()
+
+        if values[0][0] == "Produto":
+            category_product()
+
+        if values[0][0] == "Caixa":
+            category_cashier()
+
+        if values[0][0] == "Estoque":
+            category_stock()
+      
+
+window.close()

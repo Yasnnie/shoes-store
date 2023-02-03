@@ -3,6 +3,7 @@ from add_purchase_mixin import AddPurchaseMixin
 class Person(AddPurchaseMixin):
 
     def __init__(self,cpf,name,address,birth_date):
+        super().__init__()
         self.__name = name
         self.__address = address
         self.__birth_date = birth_date

@@ -7,7 +7,11 @@ class Employee(Person):
         self.__office = office
 
     def comission(self):
-        pass
+        total = 0
+        for purchase in super().get_purchases():
+            total = total + purchase.get_total()
+        
+        return "Funcionário:{}({})\nComissão:{}".format(super().get_name(),super().get_cpf(), total)
 
     def get_office(self):
         return self.__office

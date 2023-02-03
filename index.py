@@ -4,10 +4,10 @@ employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Es
 
 
 def find_option(list_options, option):
-    find = Null
+    find = None
 
     for x in list_options:
-        if x == option:
+        if x.get_cpf() == option:
             find = x
         
     return find
@@ -46,8 +46,8 @@ def category_employee():
 
         find = find_option(employees, cpf)
 
-        if find != Null:
-            find.comission()
+        if find != None:
+            print(find.comission())
 
         else:
             print("Funcionário não encontrado!!")

@@ -1,12 +1,22 @@
 import PySimpleGUI as sg
 from employee import Employee
-# from customers import Customer
+from customer import Customer
 
 sg.theme('DarkAmber')
 
 employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Estoquista")]
-# customers = [Customer("44455566678", "Victor Rafael", "Teste","13/12/1998")]
+customers = [Customer("44455566678", "Victor Rafael", "Teste","13/12/1998")]
 
+
+def list_all(objects_list):
+    layout2 = []
+            
+    for x in objects_list:
+        layout2.append([sg.Text(x)])
+        layout2.append([sg.Text("------------------------")])
+
+    form = sg.Window(values[0][0], layout2)
+    form.read()
 
 def find_option(list_options, option):
     find = None
@@ -50,19 +60,11 @@ def category_employee():
                 event2, values2 = form.read()
 
                 if event2 == "Ok":
-                    employees.append(Employee(values[0],values[1],values[2],values[3],values[4]))
+                    employees.append(Employee(values2[0],values2[1],values2[2],values2[3],values2[4]))
                     form.close()
 
             if option == "Listar funcionários":
-                layout2 = []
-        
-                
-                for x in employees:
-                    layout2.append([sg.Text(x)])
-                    layout2.append([sg.Text("------------------------")])
-
-                form = sg.Window(values[0][0], layout2)
-                form.read()
+                list_all(employees)
 
             
             if option == "Comissão de um funcionário": 
@@ -81,7 +83,7 @@ def category_employee():
                         form['-TEXT-'].Update(find.comission())
 
                     else:
-                        print("Funcionário não encontrado!!")
+                        form['-TEXT-'].Update("Funcionário não encontrado!!")
 
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             window.close()
@@ -89,10 +91,70 @@ def category_employee():
 
 
 def category_customer():
-    print("========== Escolha uma função: ==========\n\n1.Criar cliente\n2.Listar clientes\n3.Dados do cliente\n4.Realizar um compra\n5.Pagar uma compra\n6.Cancelar compra\n7.Sair\n\n==========================================")
-    option = int(input())
+    
+    layout = [[sg.Text("Selecione uma opção:")],[sg.Listbox(values=['Criar cliente', 'Listar clientes','Visualizar Cliente','Comprar' ,'Pagar compra', 'Cancelar compra', 'Visualizar compra'], size=(60, 6))],[sg.Ok(), sg.Cancel()]]
 
-    # if option == 1:
+    window = sg.Window('Cliente', layout)
+    
+
+    while True:
+        event, values = window.read()
+
+        if event == "Ok":
+            option = values[0][0]
+
+            if option == "Criar cliente":
+                layout2 = [[sg.Text("CPF:"),sg.InputText()],
+                [sg.Text("Nome:"),sg.InputText()],
+                [sg.Text("Endereço:"),sg.InputText()],
+                [sg.Text("Data de aniversário:"),sg.InputText()],
+                [sg.Ok()]]
+
+                form = sg.Window(values[0][0], layout2)
+                
+                event2, values2 = form.read()
+
+                if event2 == "Ok":
+                    customers.append(Customer(values2[0],values2[1],values2[2],values2[3]))
+                    form.close()
+
+            if option == "Listar clientes":
+                list_all(customers)
+
+            if option == "Visualizar Cliente":
+                layout2 = [[sg.Text("Digite o CPF do cliente:"),sg.InputText()],
+                [sg.Text( key='-TEXT-')],
+                [sg.Ok()]]
+
+                form = sg.Window(values[0][0], layout2)
+                
+                event2, values2 = form.read()
+                if event2 == "Ok":
+                    find = find_option(customers, values2[0])
+
+                    if find != None:
+                        form['-TEXT-'].Update(find.get_all_information())
+
+                    else:
+                        form['-TEXT-'].Update("Cliente não encontrado!!")
+
+            if option == "Comprar":
+                print("Comprar")
+
+            if option == "Pagar compra":
+                print("Pagar compra")
+
+            if option == "Cancelar compra":
+                print("Cancelar compra")
+
+            if option == "Visualizar compra":
+                print("Visualizar compra")
+                
+        if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+            window.close()
+            break
+
+        
 
 
 def category_stock():

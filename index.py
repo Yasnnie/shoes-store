@@ -1,12 +1,17 @@
 import PySimpleGUI as sg
 from employee import Employee
 from customer import Customer
+from product import Product
+from cashier import Cashier
+from stock import Stock
 
 sg.theme('DarkAmber')
 
+products = [Product(200,"tênis", "Nike", "Jordan 4", 39)]
+stocks = [Stock()]
+cashiers = [Cashier(stocks[0],2000)]
 employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Estoquista")]
 customers = [Customer("44455566678", "Victor Rafael", "Teste","13/12/1998")]
-
 
 def list_all(objects_list):
     layout2 = []
@@ -140,17 +145,53 @@ def category_customer():
                         form['-TEXT-'].Update("Cliente não encontrado!!")
 
             if option == "Comprar":
-                print("Comprar")
+                layout2 = [[sg.Listbox(values=customers,size=(90, 6))],
+                [sg.Listbox( values=cashiers,size=(90, 6))],
+                [sg.Listbox( values=employees,size=(90, 6))],
+                [sg.Listbox( values=products,size=(90, 6),select_mode='extended')],
+                [sg.Button("Comprar"),sg.Cancel()]]
 
-            if option == "Pagar compra":
-                print("Pagar compra")
+                form = sg.Window(values[0][0], layout2)
 
-            if option == "Cancelar compra":
-                print("Cancelar compra")
+                
+                event2, values2 = form.read()
+                if event2 == "Comprar":
+                    if values2[0][0] and values2[1][0] and values2[2][0] and values2[3][0]:
+                        values2[0][0].new_purchase(values2[3][0],values2[1][0],values2[2][0])
+                    else:
+                        print("error")
+
+                if event2 == sg.WIN_CLOSED or event2 == 'Cancel': # if user closes window or clicks cancel
+                    form.close()
+                    
+
+            if option == "Pagar compra" or option == "Cancelar compra":
+                layout2 = [[sg.Listbox(values=customers),sg.Button("Selecionar")],
+                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False),sg.Button(option, key="-BUTTON-VER-", visible=False)],
+                [sg.Cancel()]]
+
+                form = sg.Window(values[0][0], layout2)
+
+                while True:
+                    event2, values2 = form.read()
+
+                    if event2 == "Selecionar":
+                        form['-LIST-PRODUCTS-'].Update(values=values2[0][0].get_purchases(),visible=True)
+                        form['-BUTTON-VER-'].Update(visible=True)
+
+                    if event2 == "-BUTTON-VER-":
+                        if option == "Pagar compra":
+                            values2[0][0].pay_purchase(values2["-LIST-PRODUCTS-"][0].get_id())
+                        else:
+                            values2[0][0].cancel_purchase(values2["-LIST-PRODUCTS-"][0].get_id())
+
+                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel': # if user closes window or clicks cancel
+                        form.close()
+                        break
 
             if option == "Visualizar compra":
                 layout2 = [[sg.Listbox(values=customers),sg.Button("Selecionar")],
-                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False),sg.Button("Ver", key="-BUTTON-VER-", visible=False)],
+                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False),sg.Button(option, key="-BUTTON-VER-", visible=False)],
                 [sg.Text(key="-TEXT-")],
                 [sg.Cancel()]]
 
@@ -173,8 +214,6 @@ def category_customer():
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             window.close()
             break
-
-        
 
 
 def category_stock():

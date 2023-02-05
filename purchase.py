@@ -2,17 +2,17 @@ import random
 from datetime import datetime
 from enum import Enum
 
-from employee import Employee
 from customer import Customer
+from employee import Employee
 from product import Product
 
 idDate = datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(1000, 9999))
 
 class Purchase:
-    def __init__(self, employee: Employee, customer: Customer, products: list[Product], status: str):
+    def __init__(self, employee: Employee, customer_purchase: Customer, products: list[Product], status: str):
         self.__id = idDate
         self.__employee = employee
-        self.__customer = customer
+        self.__customer = customer_purchase
         self.__product = products
         self.__status = status
         
@@ -24,14 +24,16 @@ class Purchase:
 
     def get_employee(self):
         return self.__employee
+        
     def set_employee(self, employee):
         self.__employee = employee
 
 
     def get_costumer(self):
         return self.__customer
-    def set_costumer(self, customer):
-        self.__customer = customer
+
+    def set_costumer(self, customer_purchase):
+        self.__customer = customer_purchase
 
 
     def get_product(self):

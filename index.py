@@ -27,6 +27,7 @@ def find_option(list_options, option):
         
     return find
 
+    
 
 def category_address():
     print("Endereço")
@@ -148,8 +149,27 @@ def category_customer():
                 print("Cancelar compra")
 
             if option == "Visualizar compra":
-                print("Visualizar compra")
-                
+                layout2 = [[sg.Listbox(values=customers),sg.Button("Selecionar")],
+                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False),sg.Button("Ver", key="-BUTTON-VER-", visible=False)],
+                [sg.Text(key="-TEXT-")],
+                [sg.Cancel()]]
+
+                form = sg.Window(values[0][0], layout2)
+
+                while True:
+                    event2, values2 = form.read()
+
+                    if event2 == "Selecionar":
+                        form['-LIST-PRODUCTS-'].Update(values=values2[0][0].get_purchases(),visible=True)
+                        form['-BUTTON-VER-'].Update(visible=True)
+
+                    if event2 == "-BUTTON-VER-":
+                        form["-TEXT-"].Update(values2["-LIST-PRODUCTS-"][0])
+
+                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel': # if user closes window or clicks cancel
+                        form.close()
+                        break
+
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             window.close()
             break

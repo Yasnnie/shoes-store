@@ -1,7 +1,7 @@
 class AddPurchaseMixin():
     
     def __init__(self):
-        self.__purchases = []
+        self.__purchases = ["teste"]
 
     def add_purchase(self,purchase):
         self.__purchases.appendd(purchase)

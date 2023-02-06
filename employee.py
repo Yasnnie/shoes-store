@@ -8,6 +8,7 @@ class Employee(Person):
 
     def comission(self):
         total = 0
+        print(super().get_purchases())
         for purchase in super().get_purchases():
             total = total + purchase.get_total()
         

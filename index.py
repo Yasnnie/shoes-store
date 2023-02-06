@@ -5,9 +5,10 @@ from product import Product
 from cashier import Cashier
 from stock import Stock
 
+
 sg.theme('DarkAmber')
 
-products = [Product(200,"tênis", "Nike", "Jordan 4", 39)]
+products = [Product(200,"tênis", "Nike", "Jordan 4", 39), Product(100,"Tênis", "Nike", "Jordan 4", 39)]
 stocks = [Stock()]
 cashiers = [Cashier(stocks[0],2000)]
 employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Estoquista")]
@@ -38,7 +39,44 @@ def category_address():
     print("Endereço")
 
 def category_product():
-    print("Produto")
+    layout = [
+        [sg.Text("Selecione uma opção:")],
+        [sg.Listbox(values=['Adicionar produto', 'Listar produtos'], size=(60, 6))],
+        [sg.Ok(), sg.Cancel()]
+        ]
+    
+    window = sg.Window('Produtos', layout)
+
+    while True:
+        event, values = window.read()
+
+        if event == "Ok":
+            option = values[0][0]
+
+            if option == "Adicionar produto":
+                layout2 = [
+                    [sg.Text("Preço:"),sg.InputText()],
+                    [sg.Text("Tipo:"),sg.InputText()],
+                    [sg.Text("Marca:"),sg.InputText()],
+                    [sg.Text("Modelo:"),sg.InputText()],
+                    [sg.Text("Tamanho:"),sg.InputText()],
+                    [sg.Ok()]
+                ]
+
+                form = sg.Window(option, layout2)
+                
+                event2, values2 = form.read()
+
+                if event2 == "Ok":
+                    products.append(Product(float(values2[0]), values2[1], values2[2], values2[3], int(values2[4])))
+                    form.close()
+
+            if option == "Listar produtos":
+                list_all(products)
+
+        if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+            window.close()
+            break
 
 def category_employee():
     layout = [[sg.Text("Selecione uma opção:")],[sg.Listbox(values=['Criar funcionário', 'Listar funcionários', 'Comissão de um funcionário'], size=(60, 6))],[sg.Ok(), sg.Cancel()]]
@@ -91,7 +129,6 @@ def category_employee():
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             window.close()
             break
-
 
 def category_customer():
     
@@ -214,7 +251,76 @@ def category_customer():
 
 
 def category_stock():
-    print("Estoque")
+    layout = [
+        [sg.Text("Selecione uma opção:")],
+        [sg.Listbox(values=['Adicionar ao estoque', 'Remover do estoque', 'Listar itens'], size=(60, 6))],
+        [sg.Ok(), sg.Cancel()]
+        ]
+    
+    window = sg.Window('Estoque', layout)
+
+    while True:
+        event, values = window.read()
+
+        if event == "Ok":
+            option = values[0][0]
+
+            if option == "Adicionar ao estoque":
+                """Cria o layout base, com uma lista de produtos"""
+                layout2 = [
+                    [sg.Listbox(values=products, size=(90, 6), enable_events=True)],
+                    [sg.Text(key='-TEXT-')],
+                    [sg.Ok()]]
+
+                form = sg.Window(option, layout2)
+                
+                while True:
+                    event2, values2 = form.read()
+
+                    """Caso seja selecionado algum produto, o texto é atualizado com o __str__ desse produto
+                        com um produto selecionado, caso seja pressionado o botão OK, o produto é adicionado ao estoque"""
+                    if event2 == 0:
+                        form['-TEXT-'].Update(values2[0][0])
+
+                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel':
+                        form.close()
+                        break
+
+                    if event2 == "Ok":
+                        stocks[0].add(values2[0][0])
+                        form.close()
+
+            if option == "Remover do estoque":
+                """Cria o layout base com uma lista de produtos disponíveis no estoque, o deixando clicáveis"""
+                layout2 = [
+                    [sg.Listbox(values=stocks[0].get_products(), size=(90, 6), enable_events=True)],
+                    [sg.Text(key='-TEXT-')],
+                    [sg.Ok()]]
+
+                form = sg.Window(option, layout2)
+                
+                while True:
+                    event2, values2 = form.read()
+
+                    if event2 == 0:
+                        form['-TEXT-'].Update(values2[0][0])
+
+                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel':
+                        form.close()
+                        break
+                    
+                    """Remove o produto selecionado do estoque"""
+                    if event2 == "Ok":
+                        stocks[0].remove(values2[0][0])
+                        form.close()
+            
+            """Retorna todos os itens do estoque"""
+            if option == "Listar itens":
+                list_all(stocks[0].get_products())
+
+        if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+            window.close()
+            break
 
 def category_cashier():
     print("Caixa")

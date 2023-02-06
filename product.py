@@ -1,3 +1,4 @@
+import locale
 class Product:
     def __init__(self, price: float, type: str, brand: str, model: str, size: int) -> None:
         self.__price = price
@@ -37,4 +38,4 @@ class Product:
         self.__size = size
 
     def __str__(self) -> str:
-        return f"{self.__price}, {self.__type}, {self.__brand}, {self.__model}, {self.__size}"
+        return f"TIPO: {self.__type.capitalize()}\nPREÇO: {locale.currency(self.__price)}\nMARCA: {self.__brand.capitalize()}\nMODELO: {self.__model.capitalize()}\nTAMANHO: {self.__size}"

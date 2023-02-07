@@ -362,7 +362,45 @@ def category_stock():
             break
 
 def category_cashier():
-    print("Caixa")
+    layout = [
+        [sg.Text("Selecione uma opção:")],
+        [sg.Listbox(values=['Adicionar caixa', 'Listar caixas'], size=(60, 6))],
+        [sg.Ok(), sg.Cancel()]
+        ]
+    window = sg.Window('Caixa', layout)
+
+    while True:
+        event, values = window.read()
+
+        if event == "Ok":
+            option = values[0][0]
+
+            if option == "Adicionar endereço":
+                layout2 = [
+                    [sg.Text("Rua:"),sg.InputText()],
+                    [sg.Text("Cidade:"),sg.InputText()],
+                    [sg.Text("Estado:"),sg.InputText()],
+                    [sg.Text("País :"),sg.InputText()],
+                    [sg.Text("Número:"),sg.InputText()],
+                    [sg.Text("Bairro:"),sg.InputText()],
+                    [sg.Ok()]
+                ]
+
+                form = sg.Window(option, layout2)
+                
+                event2, values2 = form.read()
+
+                if event2 == "Ok":
+                    products.append(Product(float(values2[0]), values2[1], values2[2], values2[3], int(values2[4])))
+                    form.close()
+
+            if option == "Listar produtos":
+                list_all(products)
+
+        if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+            window.close()
+            break
+
 
 layout = [[sg.Text("Selecione uma categoria:")],[sg.Listbox(values=['Endereço', 'Funcionário', 'Cliente','Produto','Caixa','Estoque'], size=(60, 6))],[sg.Submit(), sg.Cancel()]]
 

@@ -2,7 +2,6 @@ from stock import Stock
 from purchase import Purchase
 import random
 from datetime import datetime
-from enum import Enum
 from employee import Employee
 from customer import Customer
 

@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 from employee import Employee
 from customer import Customer
+from address import Address
 from product import Product
 from cashier import Cashier
 from stock import Stock
@@ -8,6 +9,7 @@ from stock import Stock
 
 sg.theme('DarkAmber')
 
+adress = [Address("Rua 1", "São Paulo", "SP", "Brasil", "Centro")]
 products = [Product(200,"tênis", "Nike", "Jordan 4", 39), Product(100,"Tênis", "Nike", "Jordan 4", 39)]
 stocks = [Stock()]
 cashiers = [Cashier(stocks[0],2000)]
@@ -36,7 +38,44 @@ def find_option(list_options, option):
     
 
 def category_address():
-    print("Endereço")
+    layout = [
+        [sg.Text("Selecione uma opção:")],
+        [sg.Listbox(values=['Adicionar endereço', 'Listar endereços'], size=(60, 6))],
+        [sg.Ok(), sg.Cancel()]
+        ]
+    window = sg.Window('Endereços', layout)
+
+    while True:
+        event, values = window.read()
+
+        if event == "Ok":
+            option = values[0][0]
+
+            if option == "Adicionar endereço":
+                layout2 = [
+                    [sg.Text("Rua:"),sg.InputText()],
+                    [sg.Text("Cidade:"),sg.InputText()],
+                    [sg.Text("Estado:"),sg.InputText()],
+                    [sg.Text("País :"),sg.InputText()],
+                    [sg.Text("Bairro:"),sg.InputText()],
+                    [sg.Ok()]
+                ]
+
+                form = sg.Window(option, layout2)
+                
+                event2, values2 = form.read()
+
+                if event2 == "Ok":
+                    adress.append(Address(values2[0], values2[1], values2[2], values2[3], values2[4]))
+                    form.close()
+
+            if option == "Listar endereços":
+                list_all(adress)
+
+        if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+            window.close()
+            break
+
 
 def category_product():
     layout = [

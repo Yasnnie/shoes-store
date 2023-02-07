@@ -7,6 +7,9 @@ Foi realizado para cumprir o requisito da prova final da disciplina POO no IFRN,
 - Python Vanilla (Funcionalidade)
 - PySimpleGui (Interface)
 
+## 🪛 Dependências
+- [tk-8.6.13-1](https://docs.python.org/3/library/tkinter.html)
+
 ## 📚 Conceitos
 
 ``` python

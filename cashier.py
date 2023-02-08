@@ -1,16 +1,19 @@
-from stock import Stock
-from purchase import Purchase
 import random
 from datetime import datetime
-from enum import Enum
+
+from add_purchase_mixin import AddPurchaseMixin
+from purchase_handler_interface import PurchaseHandlerInterface
+
+from stock import Stock
+from purchase import Purchase
 from employee import Employee
 from customer import Customer
 
 
-idDate = datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(1000, 9999))
-class Cashier():
+
+class Cashier(PurchaseHandlerInterface, AddPurchaseMixin):
     def __init__(self, stock: Stock, credit: float, purchases: list[Purchase] = list()):
-        self.__id = idDate
+        self.__id = datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(1000, 9999))
         self.__stock = stock
         self.__credit = credit
         self.__purchases = purchases
@@ -26,8 +29,6 @@ class Cashier():
     def get_credit(self):
         return self.__credit
     
-    def get_purchases(self):
-        return self.__purchases
 
     # Methods
     
@@ -48,11 +49,8 @@ class Cashier():
         self.__purchases.remove(purchase)
 
 
-    '''
-        add an existing purchase to the list of purchases
-    '''
-    def add_existing_purchase(self, purchase: Purchase) -> None:
-        self.__purchases.append(purchase)
-
     def __str__(self):
         return f"ID:{self.__id} | \nCrédito:{self.__credit}"
+    
+
+PurchaseHandlerInterface.register(Cashier)

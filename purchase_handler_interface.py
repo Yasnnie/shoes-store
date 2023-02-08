@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
-def PurchaseHandlerInterface(ABC):
+class PurchaseHandlerInterface(ABC):
     """ Responsável por cancelar uma compra ou pedido de compra """
     @abstractmethod
-    def cancel(self):
+    def cancel_purchase(self):
         pass
 
     """ Responsável por criar uma compra ou pedido de compra """
     @abstractmethod
-    def create(self):
+    def create_purchase(self):
         pass

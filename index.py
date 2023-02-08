@@ -1,4 +1,6 @@
 import PySimpleGUI as sg
+import locale
+
 from employee import Employee
 from customer import Customer
 from address import Address
@@ -6,10 +8,12 @@ from product import Product
 from cashier import Cashier
 from stock import Stock
 
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
 
 sg.theme('DarkAmber')
 
-adress = [Address("Rua 1", "São Paulo", "SP", "Brasil", "Centro")]
+address = [Address("Rua 1", "São Paulo", "SP", "Brasil", "Centro")]
 products = [Product(200,"tênis", "Nike", "Jordan 4", 39), Product(100,"Tênis", "Nike", "Jordan 4", 39)]
 stocks = [Stock()]
 cashiers = [Cashier(stocks[0],2000)]
@@ -66,11 +70,11 @@ def category_address():
                 event2, values2 = form.read()
 
                 if event2 == "Ok":
-                    adress.append(Address(values2[0], values2[1], values2[2], values2[3], values2[4]))
+                    address.append(Address(values2[0], values2[1], values2[2], values2[3], values2[4]))
                     form.close()
 
             if option == "Listar endereços":
-                list_all(adress)
+                list_all(address)
 
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             window.close()
@@ -228,15 +232,16 @@ def category_customer():
 
                     if event2 == "Comprar":
                         if values2[0][0] and values2[1][0] and values2[2][0] and values2[3][0]:
-                            values2[0][0].new_purchase(values2[3][0],values2[1][0],values2[2][0])
-                            break
+                            values2[0][0].create_purchase(values2[3][0],values2[1][0],values2[2][0])
                             form.close()
+                            break
+
                         else:
                             print("error")
 
                     if event2 == sg.WIN_CLOSED or event2 == 'Cancel': # if user closes window or clicks cancel
-                        break
                         form.close()
+                        break
                                  
             if option == "Pagar compra" or option == "Cancelar compra":
                 layout2 = [[sg.Listbox(values=customers,enable_events=True)],

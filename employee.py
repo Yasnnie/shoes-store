@@ -6,12 +6,22 @@ class Employee(Person):
         super().__init__(cpf,name,address,birth_date)
         self.__office = office
 
+    '''
+    Pegar comissão do funcionário
+    '''
+
     def comission(self):
         total = 0
         for purchase in super().get_purchases():
             total += purchase.total_price()
-        
+
+        total = total * 0.05
+
         return "Funcionário:{}({})\nComissão:{}".format(super().get_name(),super().get_cpf(), total)
+
+    '''
+    gets e sets
+    '''
 
     def get_office(self):
         return self.__office

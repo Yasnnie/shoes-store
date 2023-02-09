@@ -9,9 +9,9 @@ class Person(AddPurchaseMixin):
         self.__birth_date = birth_date
         self.__cpf = cpf
 
-'''
-gets e sets
-'''
+    '''
+    gets e sets
+    '''
 
     def get_cpf(self):
         return self.__cpf

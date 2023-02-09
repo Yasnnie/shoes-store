@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import locale
 
+from purchase import Purchase
 from employee import Employee
 from customer import Customer
 from address import Address
@@ -19,7 +20,7 @@ stocks = [Stock()]
 cashiers = [Cashier(stocks[0],2000)]
 employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Estoquista")]
 customers = [Customer("44455566678", "Victor Rafael", "Teste","13/12/1998"),Customer("52834588820", "Luisa", "Teste","23/02/1994")]
-Purchases = []
+Purchases = [Purchase(employees[0], customers[0], products[0], "pending")]
 
 def list_all(objects_list):
     layout2 = []
@@ -368,7 +369,7 @@ def category_stock():
 def category_cashier():
     layout = [
         [sg.Text("Selecione uma opção:")],
-        [sg.Listbox(values=['Criar Compra', 'Cancelar Compra', 'Adicionar Compra Existente'], size=(60, 6))],
+        [sg.Listbox(values=['Criar Compra', 'Cancelar Compra'], size=(60, 6))],
         [sg.Ok(), sg.Cancel()]
         ]
     
@@ -427,6 +428,7 @@ def category_cashier():
                     
                     if event3 == "Ok":
                         customerPurchase = (values3[0][0])
+                        
                         form.close()
                         break
 
@@ -454,11 +456,11 @@ def category_cashier():
                         form.close()
                         break
 
-                Purchases.append(Cashier.create_purchase(employee, customerPurchase, purchaseProducts))
+                cashiers[0].create_purchase(employee=employee, customer_purchase=customerPurchase, products=purchaseProducts)
 
             if option == "Cancelar Compra":
                 layout2 = [
-                    [sg.Listbox(values=Purchases, size=(90, 6), enable_events=True)],
+                    [sg.Listbox(values=cashiers[0].get_purchases(), size=(90, 6), enable_events=True)],
                     [sg.Text(key='-TEXT-')],
                     [sg.Ok()]]
 

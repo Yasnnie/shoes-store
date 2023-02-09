@@ -19,6 +19,7 @@ stocks = [Stock()]
 cashiers = [Cashier(stocks[0],2000)]
 employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Estoquista")]
 customers = [Customer("44455566678", "Victor Rafael", "Teste","13/12/1998"),Customer("52834588820", "Luisa", "Teste","23/02/1994")]
+Purchases = []
 
 def list_all(objects_list):
     layout2 = []
@@ -47,7 +48,7 @@ def category_address():
         [sg.Listbox(values=['Adicionar endereço', 'Listar endereços'], size=(60, 6))],
         [sg.Ok(), sg.Cancel()]
         ]
-    window = sg.Window('Endereços', layout)
+    window = sg.Window('Endereço', layout)
 
     while True:
         event, values = window.read()
@@ -79,7 +80,6 @@ def category_address():
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             window.close()
             break
-
 
 def category_product():
     layout = [
@@ -293,7 +293,6 @@ def category_customer():
             window.close()
             break
 
-
 def category_stock():
     layout = [
         [sg.Text("Selecione uma opção:")],
@@ -367,7 +366,129 @@ def category_stock():
             break
 
 def category_cashier():
-    print("Caixa")
+    layout = [
+        [sg.Text("Selecione uma opção:")],
+        [sg.Listbox(values=['Criar Compra', 'Cancelar Compra', 'Adicionar Compra Existente'], size=(60, 6))],
+        [sg.Ok(), sg.Cancel()]
+        ]
+    
+    window = sg.Window('Caixa', layout)
+
+    while True:
+        event, values = window.read()
+
+        if event == "Ok":
+            option = values[0][0]
+
+            if option == "Criar Compra":
+                layout2 = [
+                    [sg.Listbox(values=employees, size=(90, 6), enable_events=True)],
+                    [sg.Text(key='-TEXT-')],
+                    [sg.Ok()]]
+
+                form = sg.Window("Funcionário", layout2)
+                
+                
+
+                while True:
+                    event2, values2 = form.read()
+
+                    if event2 == 0:
+                        form['-TEXT-'].Update(values2[0][0])
+
+                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel':
+                        form.close()
+                        break
+                    
+                    if event2 == "Ok":
+                        employee = (values2[0][0])
+                        
+                        form.close()
+
+
+                layout3 = [
+                    [sg.Listbox(values=customers, size=(90, 6), enable_events=True)],
+                    [sg.Text(key='-TEXT-')],
+                    [sg.Ok()]]
+
+                form = sg.Window("Cliente", layout3)
+                
+                
+
+                while True:
+                    event3, values3 = form.read()
+
+                    if event3 == 0:
+                        form['-TEXT-'].Update(values3[0][0])
+
+                    if event3 == sg.WIN_CLOSED or event3 == 'Cancel':
+                        form.close()
+                        break
+                    
+                    if event3 == "Ok":
+                        customerPurchase = (values3[0][0])
+                        form.close()
+                        break
+
+                purchaseProducts = []
+
+                layout4 = [
+                    [sg.Listbox(values=stocks[0].get_products(), size=(90, 6), enable_events=True)],
+                    [sg.Text(key='-TEXT-')],
+                    [sg.Ok()]]
+
+                form = sg.Window("Produtos", layout4)
+                
+                while True:
+                    event4, values4 = form.read()
+
+                    if event4 == 0:
+                        form['-TEXT-'].Update(values4[0][0])
+
+                    if event4 == sg.WIN_CLOSED or event4 == 'Cancel':
+                        form.close()
+                        break
+                    
+                    if event4 == "Ok":
+                        purchaseProducts.append(values4[0][0])
+                        form.close()
+                        break
+
+                Purchases.append(Cashier.create_purchase(employee, customerPurchase, purchaseProducts))
+
+            if option == "Cancelar Compra":
+                layout2 = [
+                    [sg.Listbox(values=Purchases, size=(90, 6), enable_events=True)],
+                    [sg.Text(key='-TEXT-')],
+                    [sg.Ok()]]
+
+                form = sg.Window("Cancele uma Compra", layout2)
+                
+                
+
+                while True:
+                    event2, values2 = form.read()
+
+                    if event2 == 0:
+                        form['-TEXT-'].Update(values2[0][0])
+
+                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel':
+                        form.close()
+                        break
+                    
+                    if event2 == "Ok":
+                        Purchases.remove(values2[0][0])
+                        form.close()
+
+
+            """Retorna todos os itens do estoque"""
+            if option == "Listar itens":
+                list_all(stocks[0].get_products())
+
+        if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+            window.close()
+            break
+
 
 layout = [[sg.Text("Selecione uma categoria:")],[sg.Listbox(values=['Endereço', 'Funcionário', 'Cliente','Produto','Caixa','Estoque'], size=(60, 6))],[sg.Submit(), sg.Cancel()]]
 

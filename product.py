@@ -7,7 +7,7 @@ class Product:
         self.__model = model
         self.__size = size
 
-    def get_price(self) -> float:
+    def get_price(self):
         return self.__price
 
     def get_type(self) -> str:

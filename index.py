@@ -16,10 +16,10 @@ sg.theme('DarkAmber')
 
 address = [Address("Rua 1", "São Paulo", "SP", "Brasil", "Centro")]
 products = [Product(200,"tênis", "Nike", "Jordan 4", 39), Product(100,"Tênis", "Nike", "Jordan 4", 39)]
-stocks = [Stock()]
+stocks = [Stock(products)]
 cashiers = [Cashier(stocks[0],2000)]
-employees = [Employee("12345678988","Yasmin Carvalho", "teste","22/09/2002", "Estoquista")]
-customers = [Customer("44455566678", "Victor Rafael", "Teste","13/12/1998"),Customer("52834588820", "Luisa", "Teste","23/02/1994")]
+employees = [Employee("12345678988","Yasmin Carvalho", address[0],"22/09/2002", "Estoquista")]
+customers = [Customer("44455566678", "Victor Rafael", address[0],"13/12/1998"),Customer("52834588820", "Luisa", "Teste","23/02/1994")]
 Purchases = [Purchase(employees[0], customers[0], products[0], "pending")]
 
 def list_all(objects_list):
@@ -138,7 +138,7 @@ def category_employee():
 
                 layout2 = [[sg.Text("CPF:"),sg.InputText()],
                 [sg.Text("Nome:"),sg.InputText()],
-                [sg.Text("Endereço:"),sg.InputText()],
+                [sg.Text("Endereço:"),sg.Listbox(values=address,size=(60, 6))],
                 [sg.Text("Data de aniversário:"),sg.InputText()],
                 [sg.Text("Cargo:"),sg.InputText()],
                 [sg.Ok()]]
@@ -147,7 +147,7 @@ def category_employee():
                 
                 event2, values2 = form.read()
 
-                if event2 == "Ok":
+                if event2 == "Ok" and values2:
                     employees.append(Employee(values2[0],values2[1],values2[2],values2[3],values2[4]))
                     form.close()
 
@@ -190,7 +190,7 @@ def category_customer():
             if option == "Criar cliente":
                 layout2 = [[sg.Text("CPF:"),sg.InputText()],
                 [sg.Text("Nome:"),sg.InputText()],
-                [sg.Text("Endereço:"),sg.InputText()],
+                [sg.Text("Endereço:"),sg.Listbox(values=address,size=(60, 6))],
                 [sg.Text("Data de aniversário:"),sg.InputText()],
                 [sg.Ok()]]
 
@@ -198,7 +198,7 @@ def category_customer():
                 
                 event2, values2 = form.read()
 
-                if event2 == "Ok":
+                if event2 == "Ok" and values2:
                     customers.append(Customer(values2[0],values2[1],values2[2],values2[3]))
                     form.close()
 
@@ -222,18 +222,22 @@ def category_customer():
 
             if option == "Comprar":
                 layout2 = [[sg.Listbox(values=customers,size=(90, 6))],
-                [sg.Listbox( values=cashiers,size=(90, 6))],
                 [sg.Listbox( values=employees,size=(90, 6))],
-                [sg.Listbox( values=products,size=(90, 6),select_mode='extended')],
+                [sg.Listbox( values=cashiers,size=(90, 6),enable_events=True)],
+                [sg.Listbox( values=[],size=(90, 6),visible= False,select_mode='extended', key="-PRODUCTS-LIST-")],
                 [sg.Button("Comprar"),sg.Cancel()]]
 
                 form = sg.Window(option, layout2)
+
                 while True:
                     event2, values2 = form.read()
+                    
+                    if event2 == 2:
+                        form["-PRODUCTS-LIST-"].Update(values=values2[2][0].get_stock().get_products(), visible=True)
 
                     if event2 == "Comprar":
-                        if values2[0][0] and values2[1][0] and values2[2][0] and values2[3][0]:
-                            values2[0][0].create_purchase(values2[3][0],values2[1][0],values2[2][0])
+                        if values2[0][0] and values2[1][0] and values2[2][0] and values2["-PRODUCTS-LIST-"][0]:
+                            values2[0][0].create_purchase(values2["-PRODUCTS-LIST-"],values2[2][0],values2[1][0])
                             form.close()
                             break
 
@@ -245,8 +249,8 @@ def category_customer():
                         break
                                  
             if option == "Pagar compra" or option == "Cancelar compra":
-                layout2 = [[sg.Listbox(values=customers,enable_events=True)],
-                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False),sg.Button(option, key="-BUTTON-VER-", visible=False)],
+                layout2 = [[sg.Listbox(values=customers,enable_events=True,size=(90, 6))],
+                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False,size=(90, 6)),sg.Button(option, key="-BUTTON-VER-", visible=False)],
                 [sg.Cancel()]]
 
                 form = sg.Window(option, layout2)
@@ -269,8 +273,8 @@ def category_customer():
                         break
 
             if option == "Visualizar compra":
-                layout2 = [[sg.Listbox(values=customers,enable_events=True)],
-                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False),sg.Button(option, key="-BUTTON-VER-", visible=False)],
+                layout2 = [[sg.Listbox(values=customers,enable_events=True,size=(90, 6))],
+                [sg.Listbox( values=[],key='-LIST-PRODUCTS-',visible=False,size=(90, 6)),sg.Button(option, key="-BUTTON-VER-", visible=False)],
                 [sg.Text(key="-TEXT-")],
                 [sg.Cancel()]]
 

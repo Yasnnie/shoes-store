@@ -10,13 +10,13 @@ class Customer(Person, PurchaseHandlerInterface):
     def pay_purchase(self, id):
         for x in super().get_purchases():
             if x.get_id() == id:
-                x.set_state("Finished")
+                x.set_status("Finished")
                 break
     
     def cancel_purchase(self, id):
         for x in super().get_purchases():
             if x.get_id() == id:
-                x.set_state("Canceled")
+                x.set_status("Canceled")
                 break
     
     def create_purchase(self, products, cashier,employee):

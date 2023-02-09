@@ -9,7 +9,7 @@ from product import Product
 idDate = datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(1000, 9999))
 
 class Purchase:
-    def __init__(self, employee: Employee, customer_purchase: Customer, products: list[Product], status: str):
+    def __init__(self, employee: Employee, customer_purchase: Customer, products, status: str):
         self.__id = idDate
         self.__employee = employee
         self.__customer = customer_purchase
@@ -52,9 +52,12 @@ class Purchase:
     '''
     def total_price(self):
         total = 0
-        for product in self.__product:
-            total += product.get_price()
+
+        for p in self.get_product():
+            total += p.get_price()
+
         return total
+
 
     # str
     
